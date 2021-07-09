@@ -3,6 +3,7 @@
         style = "width: 80%;"
         max-width = "450"
         class = "rounded-xl py-5 px-7"
+        flat
     >
         <v-form  class="form" @submit="onSubmit" ref="form" >
             <v-container
@@ -13,7 +14,7 @@
                     class = "font-weight-bold"
                     style = "font-size: 40px;"
                 >Login</v-row>
-                <v-row>
+                <v-row class = "py-3">
                     <v-text-field
                         label = "Username"
                         type = "text"
@@ -29,7 +30,7 @@
                         prepend-icon="mdi-lock"
                     ></v-text-field>
                 </v-row>
-                <v-row justify = "center" class = "mb-3 mt-7">
+                <v-row justify = "center" class = "mb-3 mt-7 py-3">
                     <v-btn 
                         type = "submit"
                         dark

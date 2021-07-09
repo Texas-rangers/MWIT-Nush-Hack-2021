@@ -1,16 +1,37 @@
 <template>
   <v-app>
-    <v-container justify = "center" style = "width: 100%;">
+    <Appbar/>
+    <div style="width: 100vw; height: 100vh;">
+      <v-card
+        style="width: 55vw; height: 100vh; background-color: black; align-items: center; display: flex; justify-content: center;"
+        class = "white--text"
+      >
+        <v-container>
+          <v-row justify = "center" style = "font-size: 100px;">
+            ระบบจองเวลา
+          </v-row>
+          <v-row justify = "center" style = "font-size: 36px;">
+            จัดทำโดยทีมงาน YaakPenMor
+          </v-row>
+        </v-container>
+      </v-card>
+    <!-- <v-container style = "width: 100vw; height: 100vh;">
       <v-row align = "center">
-        <v-col cols = "6" class = "pl-5">
-          <div style = "height: 700px; width: 100%; background-color: red;" class = "pa-10">aaaa</div>
+        <v-col cols = "6" style = "padding: 0px; margin: 0px;">
+          <v-card style = "background-color: red; width: 100vw; min-height: 100vh;" tile flat></v-card>
         </v-col>
-        <v-col cols = "6" class = "pr-5">
+        <v-col cols = "6" justify = "center">
           <Appbar/>
           <Form @login-request="checkLogin"/>
         </v-col>
       </v-row>
-    </v-container>
+    </v-container> -->
+    <v-card
+      style = "position: absolute; left: 62.5%; top: 30%; width: 40%;"
+      flat
+    ><Form @login-request="checkLogin"/></v-card>
+          
+    </div>
   </v-app>
 </template>
 
