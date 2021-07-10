@@ -29,27 +29,34 @@
     <v-card
       style = "position: absolute; left: 62.5%; top: 30%; width: 40%;"
       flat
-    ><Form @login-request="checkLogin"/></v-card>
+    ><FormLogin @login-request="checkLogin"/></v-card>
           
     </div>
   </v-app>
 </template>
 
 <script>
-import Form from '../components/Form'
+import FormLogin from '../components/FormLogin'
 import Appbar from '../components/Appbar'
+import firebase from 'firebase'
 
   export default {
     name: 'Login',
 
     components: {
-      Form,
+      FormLogin,
       Appbar,
     },
     methods: {
-      checkLogin(r){
-        console.log(r.Username)
-        alert("FUCK")
+      async checkLogin(r){
+        try{
+          await firebase.auth()
+            .signInWithEmailAndPassword(r.Username, r.Password)
+            //this.$router.push({name: "Search"})
+            this.$router.push({name: "Home"})
+        }catch(err){
+          alert(err)
+        }
       }
     }
   }

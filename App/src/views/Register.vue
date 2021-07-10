@@ -1,34 +1,37 @@
 <template>
   <v-app>
+    <Appbar/>
     <v-card
-      style = "height: 700px; margin-top: 150px;"
-      align = "center"
-      justify = "center"
-      color = "light-blue lighten-4"
-      flat
+      style = "height: 100vh; align-items: center; display: flex; justify-content: center; background-color: #333333;"
     >
-      <Appbar/>
-      <Form2 @login-request="checkLogin"/>
+      <FormRegister @login-request="userRegister"/>
     </v-card>
   </v-app>
 </template>
 
 <script>
-import Form2 from '../components/Form2'
-import Appbar from '../components/Appbar'
+import FormRegister from '../components/FormRegister';
+import Appbar from '../components/Appbar';
+import firebase from "firebase";
 
   export default {
     name: 'Login',
 
     components: {
-      Form2,
+      FormRegister,
       Appbar,
     },
     methods: {
-      checkLogin(r){
-        console.log(r.Username)
-        alert("FUCK")
-      }
+      async userRegister(r){
+        try{
+            console.log(r)
+            await firebase.auth()
+            .createUserWithEmailAndPassword(r.Username, r.Password)
+            this.$router.push({name: "Login"})
+        }catch(err){
+            alert(err)
+        }
+      },
     }
   }
 </script>
