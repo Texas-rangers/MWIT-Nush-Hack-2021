@@ -11,7 +11,7 @@
                 <v-row justify = "center" style = "font-size: 40px;" class = "font-weight-bold">Register new shop</v-row>
                 <v-row>
                     <v-text-field
-                        label = "PlaceName"
+                        label = "Place name"
                         type = "text"
                         v-model ="PlaceName"
                         required
@@ -38,7 +38,7 @@
                 </v-row>
                 <v-row>
                     <v-text-field
-                        label = "OwnerName"
+                        label = "Owner name"
                         type = "text"
                         v-model ="OwnerName"
                         required
@@ -57,11 +57,27 @@
                 </v-row>
                 <v-row>
                     <v-text-field
-                        label = "MaxCustomer"
+                        label = "Max customers"
                         type = "number"
                         v-model ="MaxCustomer"
                         required
                         prepend-icon="mdi-account-group"
+                    ></v-text-field>
+                </v-row>
+                <v-row>
+                    <v-text-field
+                        label = "PasswordIn"
+                        type = "text"
+                        v-model ="PasswordIn"
+                        required
+                    ></v-text-field>
+                </v-row>
+                <v-row>
+                    <v-text-field
+                        label = "PasswordOut"
+                        type = "text"
+                        v-model ="PasswordOut"
+                        required
                     ></v-text-field>
                 </v-row>
                 <v-list>
@@ -181,7 +197,9 @@
             OwnerName: "",
             Phone: "",
             MaxCustomer: "",
-            Interval: [] //startTime, finishTime
+            PasswordIn: "",
+            PasswordOut: "",
+            Interval: [], //startTime, finishTime
         }
     },
     methods:{
@@ -195,6 +213,8 @@
                 OwnerName: this.OwnerName,
                 Phone: this.Phone,
                 MaxCustomer: this.MaxCustomer,
+                PasswordIn: this.PasswordIn,
+                PasswordOut: this.PasswordOut,
                 Interval: this.Interval,
                 Queue: [],
             }

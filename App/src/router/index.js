@@ -5,7 +5,6 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import firebase from 'firebase'
 import Newshop from '../views/Newshop.vue'
-import test from "../views/test.vue"
 Vue.use(VueRouter)
 
 const routes = [
@@ -30,11 +29,6 @@ const routes = [
     name: "Newshop",
     component: Newshop,
     meta: {requiresAuth: true}
-  },
-  {
-    path:"/test",
-    name: "test",
-    component: test
   },
 ]
 
