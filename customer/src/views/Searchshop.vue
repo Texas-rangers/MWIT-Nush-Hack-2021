@@ -20,7 +20,7 @@
         >
           <template v-slot:activator>
             <v-list-item-content>
-              <v-list-item-title v-text="item.PlaceName" left></v-list-item-title>
+              <v-list-item-title v-text="item.PlaceName + ' (' + item.OwnerName + ')'" left></v-list-item-title>
             </v-list-item-content>
           </template>
 

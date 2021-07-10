@@ -1,93 +1,136 @@
 <template>
-  <v-container fluid>
-    <v-row align="center">
+    <v-container class = "px-10 pb-10" style="width: 80%; max-width: 800px;">
+    <v-row justify="center">
         <v-col cols="6">
-            <v-select
-            v-model="select"
-            :items="this.shop.Interval"
-            item-text = "startTime + ' : ' + finishTime"
-            item-value = "startTime + ' - ' + finishTime"
-            label="Select"
-            return-object
-            single-line
-            ></v-select>
+            <v-date-picker
+            v-model="BookDate"
+            class="mt-7 elevation-1"        
+            ></v-date-picker>
         </v-col>
-        <v-col cols="6">
-                <v-chip
-                    class="ma-2"
-                    :color="ColorText()"
-                    text-color="white"
+        <v-col cols="6" class = "pt-3" style = "justify-content: center; align-items: center;">
+            <v-row align = "center" class = "mt-5">
+                <v-col cols = "9">
+                <v-select
+                    v-model="select"
+                    :items="this.shop.Interval"
+                    :item-text = "item => item.startTime +' - '+ item.finishTime"
+                    item-value = "item => item.startTime +' - '+ item.finishTime"
+                    label="Select"
+                    
+                    single-line
+                ></v-select>
+                </v-col>
+                <v-col cols = "3">
+                <v-btn @click="refreshCurrentCustomer()"> Check</v-btn>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-card 
+                    class = "ml-4 py-5" 
+                    v-if="this.Bad" 
+                    style = "width: 100%; font-size: 25px;"
+                    color = "red lighten-4"
                 >
-                <div v-if = "!booked">
-                    <v-avatar
-                        left
-                        class="green darken-4"
-                    >
-                        {{shop.MaxCustomer - CurrentCustomer}}
-                    </v-avatar>
-                </div>
-                    {{Remains}}
-                </v-chip>
-        </v-col>
-        <v-col cols = 2>
-            <v-btn
-                elevation="3"
-                rounded
-                :color = "getColor()"
-                :loading = "loading"
-            >
-                <v-icon dark>
-                    mdi-plus
-                </v-icon>
-            </v-btn>
+                    Not Available :(
+                </v-card>
+                <v-card 
+                    v-else 
+                    style = "width: 100%; text-align: center; font-size: 25px; line-height: 2;" 
+                    class = "ml-4 pt-5"
+                    color = "green lighten-4"
+                >
+                    <b>Available Slot(s):</b><br>
+                    <p style = "font-size: 40px;">{{this.Available}}</p>
+                </v-card>
+            </v-row>
+            <v-row class = "ml-1 mt-9">
+                <v-btn v-show="this.Available > 0 && !this.Duplicated && this.BookDate" 
+                    color = "blue accent-2"
+                    block
+                    dark
+                    @click = "AddBook()"
+                >
+                    Add queue
+                </v-btn>
+            </v-row>
         </v-col>
     </v-row>
-  </v-container>
+    
+    </v-container>
 </template>
 <script>
+import {RTDB} from "@/firebase";
   export default {
     name: 'IntervalSelect',
+    props : [
+        "shop",
+        "load",
+        "user",
+        "useruid",
+        "owneruid",
+        "shopuid",
+        ],
     data(){
         return{
-            booked: "",
+            book: "",
             CurrentCustomer: "",
-            loading = "",
-            CurrentCustomer = "",
-            shop = []
+            StDate: new Date(),
+            FnDate: new Date(new Date().getTime()+(7*24*60*60*1000)),
+            loading: "",
+            cur_shop: this.shop,
+            cur_load: this.load,
+            cur_user: this.user,
+            cur_useruid: this.useruid,
+            cur_shopuid: this.shopuid,
+            cur_owneruid: this.owneruid,
+            BookDate: "",
+            select: "",
+            time_select: [],
+            Available: 0,
+            Duplicated: false,
+            availcol: ['green lighten-4', 'amber lighten-4'],
+            Bad: true
         }
     },
     methods:{
-        RemoveBook(e){
-            booked = "";
-            loading = true;
-            //send to database
+        AddBook(){
+            var q = {} // Haven't visited, Haven't leaved, Visited and leaved;
+            q[this.user + ""] = "Haven't visited";
+            const Path = this.BookDate + " " + this.select
+            const ShopPath = "shop/" + this.owneruid + "/" + this.shopuid + "/Queue/" + Path 
+            const CusPath = "customer/" + this.useruid + "/Queue/" + Path
+            RTDB.ref(ShopPath).update({ ...q})
+            RTDB.ref(CusPath).update({ShopUID:this.shopuid,PlaceName:this.shop.PlaceName,...q})
+            alert("Successfully add to your queue, Going back to home page")
+            this.$router.push({name: "Home"})
         },
-        AddBood(e){
-            booked = "booked"
-            loading = true;
-            //send to database
-        }
-    },
-    computed:{
-        getColor(){
-            if(this.loading){
-                return "grey"
+        refreshCurrentCustomer(){
+            const dateinfo = this.BookDate + " " + this.select
+            this.Duplicated = false;
+            var foo = false;
+            var foo2 = false;
+            for(const key in this.shop.Queue){
+                if(key == dateinfo){
+                    foo = true;
+                    for(const key2 in this.shop.Queue[dateinfo]){
+                        if(key2 == this.cur_user){
+                            foo2 = true;
+            }}}}
+            if(!foo){
+                this.CurrentCustomer = 0
+            }else{
+                this.CurrentCustomer = Object.keys(this.shop.Queue[dateinfo]).length
+                if(foo2){
+                    this.Duplicated = true;
+                }
             }
-            if(this.booked){
-                return "red"
-            }else return "green"
-        },
-        ColorText(){
-            if(this.loading)return "grey";
-            if(this.booked) return "blue";
-            if(shop.MaxCustomer - this.CurrentCustomer <= 0)return "red";
-            return "green";
-        },
-        Remains : function(){
-            if(this.loading)return "loading";
-            if(this.booked)return "Already booked";
-            if(shop.MaxCustomer - this.CurrentCustomer <= 0)return "Full";
-            return "Remains";
+            console.log(this.shop.PlaceName)
+            this.Available = Number(this.shop.MaxCustomer) - this.CurrentCustomer
+            if(this.Available == 0 || !this.BookDate || !this.select){
+                this.Bad = true;
+            }else{
+                this.Bad = false;
+            }
         }
     }
   }

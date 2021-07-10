@@ -1,15 +1,20 @@
 <template>
   <v-app>
     <Appbar/>
-    <v-card style = "height: 100vh; display:flex; align-items: center; justify-content: center;" flat>
+    <v-card style = "padding-top: 100px; margin-bottom: 40px; display:flex; align-items: center; justify-content: center;" flat>
+    
       <div v-if="hasName">
         <h1> Welcome, {{this.D.Firstname}} {{this.D.Lastname}}! </h1>
         <v-btn
           class = "mt-5"
           to = "/searchshop"
+          color = "blue accent-2"
+          dark
         >Book New Time</v-btn>
       </div>
-      <div v-else>
+
+
+      <div v-else style = "padding-top: 50px;">
         <h1> Welcome, {{this.EMAIL}}</h1>
         <v-form  class="form" @submit="getName" ref="form" >
                 <v-container
@@ -45,6 +50,40 @@
                 </v-container>
             </v-form>
       </div>
+    </v-card>
+    <!-- <v-btn @click="console.log(this.D)">bedug</v-btn> -->
+    <v-card v-show="hasName" style = "width: 80%; margin-left: auto; margin-right: auto;" max-width = "900">
+      <v-simple-table fixed-header>
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-center">
+                  Shop
+                </th>
+                <th class="text-center">
+                  Date
+                </th>
+                <th class="text-center">
+                  Time
+                </th>
+                <th class="text-center">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(val, key) in D.Queue"
+                :key="key"
+              >
+                <td>{{ val.PlaceName }}</td>
+                <td>{{ key.slice(0,10) }}</td>
+                <td>{{ key.slice(11) }}</td>
+                <td>N/A</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
     </v-card>
   </v-app>
 </template>
